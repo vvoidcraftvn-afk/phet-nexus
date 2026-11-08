@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d18">
+<title>PhET NEXUS — Interactive Science Lab</title>
+<style>
+:root{--bg:#080d18;--panel:#101a2b;--panel2:#142239;--line:#243653;--text:#edf5ff;--muted:#91a5c2;--cyan:#52e5ff;--blue:#6688ff;--violet:#a78bfa;--green:#70f0c0}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 75% -10%,#1b3760 0,transparent 38%),radial-gradient(ellipse at 0% 35%,#15234a 0,transparent 32%),var(--bg);color:var(--text);font:15px/1.5 Inter,Segoe UI,Arial,sans-serif;min-height:100vh}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;background-image:linear-gradient(#6e9ac01a 1px,transparent 1px),linear-gradient(90deg,#6e9ac01a 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,#000,transparent 85%)}
+button,input{font:inherit}
+button{cursor:pointer;color:inherit}
+.shell{display:grid;grid-template-columns:248px 1fr;min-height:100vh;position:relative}
+aside{border-right:1px solid #243653aa;background:#091221c9;backdrop-filter:blur(18px);padding:26px 18px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;padding:4px 8px 28px}
+.phet-logo{display:block;width:104px;height:auto;max-height:48px;object-fit:contain}
+.brand-divider{height:34px;width:1px;background:#38506f}
+.brand-name strong{display:block;letter-spacing:2px;font-size:16px}
+.brand-name small{color:var(--muted);letter-spacing:1.4px;font-size:8px}
+.navlabel{font-size:10px;color:#607794;letter-spacing:2px;font-weight:800;padding:14px 10px 8px}
+.nav{display:grid;gap:6px}
+.nav button{border:1px solid transparent;background:transparent;text-align:left;padding:11px 12px;border-radius:11px;color:#a9bad1;display:flex;gap:12px;align-items:center;transition:.2s}
+.nav button:hover,.nav button.active{background:#172844;border-color:#2c466b;color:white}
+.nav button.active{box-shadow:inset 3px 0 var(--cyan)}
+.nav .ico{width:20px;text-align:center;font-size:17px}
+.sidefoot{margin-top:auto;border:1px solid var(--line);background:#101b2d;border-radius:14px;padding:14px;color:var(--muted);font-size:12px}
+.sidefoot b{color:var(--green);display:block;margin-bottom:5px}
+main{min-width:0;padding:28px clamp(18px,4vw,54px) 50px;max-width:1600px;width:100%;margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:28px}
+.crumb{color:var(--muted);font-size:12px;letter-spacing:1px}
+.status{display:flex;align-items:center;gap:8px;color:#a9bad1;font-size:11px;border:1px solid var(--line);padding:8px 12px;border-radius:30px;background:#0d1929}
+.dot{width:7px;height:7px;background:#6df0b5;border-radius:50%;box-shadow:0 0 12px #6df0b5}
+.hero{position:relative;overflow:hidden;border:1px solid #345174;background:linear-gradient(112deg,#122a47f2,#111d37ed 55%,#252052e8);border-radius:24px;padding:clamp(24px,4vw,48px);min-height:260px;box-shadow:0 20px 65px #0005}
+.hero:after{content:"⚛";position:absolute;right:7%;top:2%;font-size:clamp(150px,22vw,280px);line-height:1;color:#7deaff0d;transform:rotate(-14deg);text-shadow:0 0 60px #52e5ff22}
+.eyebrow{color:var(--cyan);font-size:10px;letter-spacing:3px;font-weight:900}
+.hero h1{font-size:clamp(34px,5vw,62px);line-height:1.03;letter-spacing:-2px;margin:13px 0 12px;max-width:650px}
+.hero h1 span{background:linear-gradient(90deg,#fff,var(--cyan),#b9a5ff);background-clip:text;color:transparent}
+.hero p{color:#a9bdd8;max-width:550px;margin:0 0 24px}
+.heroactions{display:flex;gap:10px;flex-wrap:wrap}
+.primary,.secondary{border:0;border-radius:10px;padding:11px 16px;font-weight:800}
+.primary{background:linear-gradient(100deg,var(--cyan),#8a9bff);color:#06111e;box-shadow:0 8px 25px #52e5ff33}
+.secondary{background:#ffffff0b;border:1px solid #587397;color:#dceaff}
+.primary:hover,.secondary:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 30px}
+.stat{border:1px solid var(--line);background:#0d1727d9;border-radius:14px;padding:15px 18px}
+.stat b{font-size:24px;display:block;letter-spacing:-1px}
+.stat span{font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+.sectionhead{display:flex;justify-content:space-between;align-items:end;gap:15px;margin:28px 0 15px}
+.sectionhead h2{margin:0;font-size:22px;letter-spacing:-.5px}
+.sectionhead p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 16px}
+.searchwrap{flex:1;min-width:220px;position:relative}
+.searchwrap span{position:absolute;left:14px;top:10px;color:#8ca2c0}
+.searchwrap input{width:100%;background:#0d1929;border:1px solid var(--line);border-radius:11px;color:white;padding:11px 14px 11px 40px;outline:none}
+.searchwrap input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #52e5ff18}
+.filter{background:#0d1929;border:1px solid var(--line);color:#c6d5e9;border-radius:11px;padding:10px 13px;outline:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{border:1px solid var(--line);background:#101b2c;color:#9db0ca;padding:7px 12px;border-radius:30px;font-size:11px}
+.chip.active,.chip:hover{background:#16314b;border-color:#4bcce7;color:#e7fbff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(225px,1fr));gap:13px}
+.sim{position:relative;overflow:hidden;text-align:left;border:1px solid var(--line);background:linear-gradient(145deg,#142239,#0d1726);border-radius:16px;padding:17px;min-height:158px;transition:.22s;display:flex;flex-direction:column;gap:9px}
+.sim:hover{transform:translateY(-4px);border-color:#52cfe9;box-shadow:0 14px 35px #0005,0 0 24px #52e5ff0b}
+.sim:after{content:"";position:absolute;width:110px;height:110px;border-radius:50%;right:-42px;top:-42px;background:var(--glow,#52e5ff);opacity:.09;filter:blur(3px)}
+.simtop{display:flex;justify-content:space-between;align-items:center}
+.simicon{width:37px;height:37px;border-radius:11px;background:#ffffff0d;display:grid;place-items:center;font-size:20px;border:1px solid #ffffff12}
+.star{border:0;background:transparent;color:#607794;font-size:19px;padding:2px;z-index:1}
+.star.on{color:#ffd66b}
+.sim h3{font-size:15px;margin:2px 0 0;line-height:1.25}
+.sim p{margin:0;color:var(--muted);font-size:11px}
+.tag{margin-top:auto;display:inline-flex;width:max-content;border:1px solid #ffffff18;border-radius:20px;padding:4px 8px;color:#a8c0db;font-size:9px;letter-spacing:1px;text-transform:uppercase}
+.launchhint{position:absolute;right:14px;bottom:13px;color:#75dff4;font-size:10px;opacity:0;transition:.2s}
+.sim:hover .launchhint{opacity:1}
+.empty{padding:45px;text-align:center;border:1px dashed #304765;border-radius:16px;color:var(--muted);grid-column:1/-1}
+footer{margin-top:38px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;color:#7187a5;font-size:11px}
+.viewer{position:fixed;inset:0;background:#060b13;z-index:20;display:none;flex-direction:column}
+.viewer.open{display:flex}
+.viewbar{height:64px;flex-shrink:0;border-bottom:1px solid var(--line);background:#0d1727;display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:10px}
+.viewtitle{display:flex;align-items:center;gap:11px;min-width:0}
+.viewtitle b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.viewtitle small{display:block;color:var(--muted);font-size:10px}
+.viewtools{display:flex;gap:7px}
+.viewtools button{background:#17263b;border:1px solid #344966;border-radius:9px;padding:8px 11px;font-size:12px}
+.viewtools button:hover{border-color:var(--cyan)}
+#simframe{border:0;width:100%;height:100%;background:white;flex:1}
+.loading{position:absolute;inset:64px 0 0;display:grid;place-items:center;background:#0a1220;z-index:-1;color:var(--muted)}
+.spinner{width:34px;height:34px;border:3px solid #29415d;border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);background:#dffaff;color:#071522;padding:10px 16px;border-radius:10px;font-size:12px;font-weight:800;opacity:0;transition:.25s;z-index:40;pointer-events:none}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:800px){
+.shell{grid-template-columns:1fr}
+aside{height:auto;position:relative;padding:12px 15px;border-right:0;border-bottom:1px solid var(--line)}
+.brand{padding:3px 5px 10px}
+.navlabel,.sidefoot{display:none}
+.nav{display:flex;overflow:auto}
+.nav button{white-space:nowrap;padding:8px 10px}
+.nav button .ico{display:none}
+main{padding:18px}
+.hero{min-height:230px}
+.stats{gap:8px}
+.stat{padding:12px}
+.stat b{font-size:20px}
+}
+@media(max-width:480px){
+.stats{grid-template-columns:1fr 1fr}
+.stats .stat:last-child{display:none}
+.topbar{align-items:flex-start}
+.status{font-size:9px}
+.viewtools button{padding:7px 8px}
+.viewtools .optional{display:none}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside>
+  <div class="brand">
+    <img class="phet-logo" src="phet-logo-trademarked.png" alt="PhET Interactive Simulations">
+    <div class="brand-divider"></div>
+    <div class="brand-name"><strong>NEXUS</strong><small>INTERACTIVE LAB SYSTEM</small></div>
+  </div>
+  <div class="navlabel">WORKSPACE</div>
+  <nav class="nav">
+    <button class="active" data-page="all"><span class="ico">⌂</span> Discover</button>
+    <button data-page="favorites"><span class="ico">☆</span> Favorites</button>
+  </nav>
+  <div class="navlabel">SUBJECTS</div>
+  <nav class="nav" id="subjectNav">
+    <button data-subject="Physics"><span class="ico">⚡</span> Physics</button>
+    <button data-subject="Chemistry"><span class="ico">⚗</span> Chemistry</button>
+    <button data-subject="Math"><span class="ico">∑</span> Math</button>
+    <button data-subject="Biology"><span class="ico">◉</span> Biology</button>
+    <button data-subject="Earth & Space"><span class="ico">✧</span> Earth & Space</button>
+  </nav>
+  <div class="sidefoot"><b>● SYSTEM ONLINE</b>Connected to the PhET simulation library.<br>Simulations load from PhET's official website.</div>
+</aside>
+<main>
+  <div class="topbar">
+    <div class="crumb">NEXUS / <span id="crumb">DISCOVER</span></div>
+    <div class="status"><i class="dot"></i> LIVE SCIENCE LIBRARY</div>
+  </div>
+  <section class="hero">
+    <div class="eyebrow">✦ EXPLORE • EXPERIMENT • UNDERSTAND</div>
+    <h1>Science is better<br>when you <span>touch it.</span></h1>
+    <p>One launchpad for interactive physics, chemistry, mathematics and more. Open a simulation and start experimenting.</p>
+    <div class="heroactions">
+      <button class="primary" onclick="document.getElementById('library').scrollIntoView({behavior:'smooth'})">Explore simulations&nbsp; ↗</button>
+      <button class="secondary" onclick="showFavorites()">☆ My favorites</button>
+    </div>
+  </section>
+  <section class="stats">
+    <div class="stat"><b id="countStat">—</b><span>Curated simulations</span></div>
+    <div class="stat"><b>05</b><span>Subject areas</span></div>
+    <div class="stat"><b>∞</b><span>Ways to experiment</span></div>
+  </section>
+  <section id="library">
+    <div class="sectionhead">
+      <div>
+        <div class="eyebrow">THE COLLECTION</div>
+        <h2 id="heading">Explore the library</h2>
+        <p id="subheading">Choose a simulation to launch it in the built-in lab.</p>
+      </div>
+    </div>
+    <div class="toolbar">
+      <div class="searchwrap"><span>⌕</span><input id="search" placeholder="Search simulations, topics..." autocomplete="off"></div>
+      <select class="filter" id="sort">
+        <option value="featured">Featured first</option>
+        <option value="az">A — Z</option>
+      </select>
+    </div>
+    <div class="chips" id="chips">
+      <button class="chip active" data-filter="All">All simulations</button>
+      <button class="chip" data-filter="Physics">Physics</button>
+      <button class="chip" data-filter="Chemistry">Chemistry</button>
+      <button class="chip" data-filter="Math">Math</button>
+      <button class="chip" data-filter="Biology">Biology</button>
+      <button class="chip" data-filter="Earth & Space">Earth & Space</button>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+  <footer>
+    <span>PHET NEXUS · AN UNOFFICIAL STUDENT PROJECT</span>
+    <span>Simulations © PhET Interactive Simulations, University of Colorado Boulder</span>
+  </footer>
+</main>
+</div>
+
+<div class="viewer" id="viewer">
+  <div class="viewbar">
+    <div class="viewtitle">
+      <div class="brandmark" style="width:34px;height:34px;font-size:18px">✦</div>
+      <div><b id="viewname">Simulation</b><small>PHET INTERACTIVE SIMULATION</small></div>
+    </div>
+    <div class="viewtools">
+      <button class="optional" onclick="openExternal()">↗ Open site</button>
+      <button class="optional" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+      <button onclick="closeViewer()">✕ Close</button>
+    </div>
+  </div>
+  <div class="loading" id="loading">
+    <div style="text-align:center"><div class="spinner"></div>Launching simulation…</div>
+  </div>
+  <iframe id="simframe" allow="fullscreen; autoplay" allowfullscreen title="PhET simulation"></iframe>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const sims = [
+["Circuit Construction Kit: DC","circuit-construction-kit-dc","Physics","⚡",1],
+["Atomic Interactions","atomic-interactions","Chemistry","⚛",1],
+["Build an Atom","build-an-atom","Chemistry","⚛",1],
+["Projectile Motion","projectile-motion","Physics","🚀",1],
+["Gravity and Orbits","gravity-and-orbits","Earth & Space","🪐",1],
+["Ohm's Law","ohms-law","Physics","🔌",1],
+["Wave on a String","wave-on-a-string","Physics","〰",1],
+["States of Matter","states-of-matter","Chemistry","🧊",1],
+["Molecule Shapes","molecule-shapes","Chemistry","🧬",1],
+["pH Scale","ph-scale","Chemistry","🧪",1],
+["Fractions: Intro","fractions-intro","Math","½",1],
+["Graphing Lines","graphing-lines","Math","📈",1],
+["Natural Selection","natural-selection","Biology","🦋",1],
+["Color Vision","color-vision","Biology","👁",1],
+["Energy Skate Park","energy-skate-park","Physics","⛸",1],
+["Bending Light","bending-light","Physics","💎",1],
+["Pendulum Lab","pendulum-lab","Physics","⏱",1],
+["Forces and Motion: Basics","forces-and-motion-basics","Physics","🧲",1],
+["Friction","friction","Physics","🛞",1],
+["Gravity Force Lab","gravity-force-lab","Physics","🌌",1],
+["Magnet and Compass","magnet-and-compass","Physics","🧭",1],
+["Magnets and Electromagnets","magnets-and-electromagnets","Physics","🧲",1],
+["Faraday's Law","faradays-law","Physics","⚡",1],
+["Generator","generator","Physics","🔋",1],
+["Resistance in a Wire","resistance-in-a-wire","Physics","〰",1],
+["Charges and Fields","charges-and-fields","Physics","➕",1],
+["Coulomb's Law","coulombs-law","Physics","⚡",1],
+["Capacitor Lab: Basics","capacitor-lab-basics","Physics","🔋",1],
+["Circuit Construction Kit: AC","circuit-construction-kit-ac","Physics","🔌",1],
+["Energy Forms and Changes","energy-forms-and-changes","Physics","♨",1],
+["Collision Lab","collision-lab","Physics","💥",1],
+["Masses and Springs","masses-and-springs","Physics","〰",1],
+["Wave Interference","wave-interference","Physics","🌊",1],
+["Waves Intro","waves-intro","Physics","🌊",1],
+["Sound Waves","sound-waves","Physics","🔊",1],
+["Fourier: Making Waves","fourier-making-waves","Physics","〰",1],
+["Buoyancy","buoyancy","Physics","🛟",1],
+["Density","density","Physics","🧊",1],
+["Under Pressure","under-pressure","Physics","💧",1],
+["Blackbody Spectrum","blackbody-spectrum","Physics","🌈",1],
+["Geometric Optics","geometric-optics","Physics","🔭",1],
+["Hooke's Law","hookes-law","Physics","🪀",1],
+["John Travoltage","john-travoltage","Physics","⚡",1],
+["Balloons and Static Electricity","balloons-and-static-electricity","Physics","🎈",1],
+["Build a Molecule","build-a-molecule","Chemistry","🧬",1],
+["Molecule Polarity","molecule-polarity","Chemistry","🧲",1],
+["Molecule Shapes: Basics","molecule-shapes-basics","Chemistry","🧪",1],
+["Isotopes and Atomic Mass","isotopes-and-atomic-mass","Chemistry","⚛",1],
+["Rutherford Scattering","rutherford-scattering","Chemistry","⚛",1],
+["Reactants, Products and Leftovers","reactants-products-and-leftovers","Chemistry","🧫",1],
+["Balancing Chemical Equations","balancing-chemical-equations","Chemistry","⚗",1],
+["Acid-Base Solutions","acid-base-solutions","Chemistry","🧪",1],
+["Concentration","concentration","Chemistry","🧴",1],
+["Molarity","molarity","Chemistry","🧪",1],
+["Beer's Law Lab","beers-law-lab","Chemistry","🌈",1],
+["Diffusion","diffusion","Chemistry","💨",1],
+["Gases Intro","gases-intro","Chemistry","🎈",1],
+["Gas Properties","gas-properties","Chemistry","💨",1],
+["Number Pairs","number-pairs","Math","🔢",1],
+["Number Compare","number-compare","Math","⚖",1],
+["Number Play","number-play","Math","🎲",1],
+["Number Line: Integers","number-line-integers","Math","➖",1],
+["Number Line: Operations","number-line-operations","Math","➕",1],
+["Number Line: Distance","number-line-distance","Math","📏",1],
+["Ratio and Proportion","ratio-and-proportion","Math","∝",1],
+["Fractions: Mixed Numbers","fractions-mixed-numbers","Math","⅔",1],
+["Build a Fraction","build-a-fraction","Math","½",1],
+["Fractions: Equality","fractions-equality","Math","🟰",1],
+["Fraction Matcher","fraction-matcher","Math","🧩",1],
+["Area Builder","area-builder","Math","📐",1],
+["Area Model Algebra","area-model-algebra","Math","∑",1],
+["Area Model Decimals","area-model-decimals","Math","🔢",1],
+["Area Model Multiplication","area-model-multiplication","Math","✖",1],
+["Graphing Quadratics","graphing-quadratics","Math","📈",1],
+["Graphing Slope-Intercept","graphing-slope-intercept","Math","📉",1],
+["Function Builder","function-builder","Math","ƒ",1],
+["Function Builder: Basics","function-builder-basics","Math","ƒ",1],
+["Equality Explorer","equality-explorer","Math","⚖",1],
+["Expression Exchange","expression-exchange","Math","🔣",1],
+["Unit Rates","unit-rates","Math","📏",1],
+["Arithmetic","arithmetic","Math","➗",1],
+["Trig Tour","trig-tour","Math","📐",1],
+["Plinko Probability","plinko-probability","Math","🎯",1],
+["Mean: Share and Balance","mean-share-and-balance","Math","⚖",1],
+["Center and Variability","center-and-variability","Math","📊",1],
+["Least-Squares Regression","least-squares-regression","Math","📈",1],
+["Quadrilateral","quadrilateral","Math","🔷",1],
+["Greenhouse Effect","greenhouse-effect","Earth & Space","🌍",1],
+["My Solar System","my-solar-system","Earth & Space","🪐",1],
+["Kepler's Laws","keplers-laws","Earth & Space","🌌",1],
+["Membrane Transport","membrane-transport","Biology","🧫",1],
+["Gene Expression Essentials","gene-expression-essentials","Biology","🧬",1],
+["Neuron","neuron","Biology","🧠",1],
+["Projectile Data Lab","projectile-data-lab","Physics","📊",1],
+["Vector Addition","vector-addition","Physics","➡",1],
+["Curve Fitting","curve-fitting","Math","📈",1],
+["Plinko Probability","plinko-probability","Math","🎯",1],
+["States of Matter: Basics","states-of-matter-basics","Chemistry","🧊",1],
+["Energy Skate Park: Basics","energy-skate-park-basics","Physics","🛹",1],
+["Forces and Motion: Basics","forces-and-motion-basics","Physics","🧲",1],
+["Geometric Optics: Basics","geometric-optics-basics","Physics","🔍",1],
+["Buoyancy: Basics","buoyancy-basics","Physics","🛟",1],
+["Gravity Force Lab: Basics","gravity-force-lab-basics","Physics","🌍",1],
+["Masses and Springs: Basics","masses-and-springs-basics","Physics","〰",1],
+["Circuit Construction Kit: DC — Virtual Lab","circuit-construction-kit-dc-virtual-lab","Physics","🧰",1],
+["Circuit Construction Kit: AC — Virtual Lab","circuit-construction-kit-ac-virtual-lab","Physics","🧰",1],
+["Vector Addition: Equations","vector-addition-equations","Math","➡",1],
+["Equality Explorer: Basics","equality-explorer-basics","Math","⚖",1],
+["Equality Explorer: Two Variables","equality-explorer-two-variables","Math","⚖",1],
+["Area Model Introduction","area-model-introduction","Math","📐",1],
+["Proportion Playground","proportion-playground","Math","∝",1],
+["Make a Ten","make-a-ten","Math","🔟",1],
+["Band Structure","band-structure","Physics","⚛",1],
+["Particle in a Box","particle-in-a-box","Physics","📦",1],
+["Quantum Bound States","quantum-bound-states","Physics","⚛",1],
+["Quantum Wave Interference","quantum-wave-interference","Physics","〰",1],
+["Quantum Coin Toss","quantum-coin-toss","Physics","🪙",1],
+["Quantum Measurement","quantum-measurement","Physics","🔬",1],
+["Models of the Hydrogen Atom","models-of-the-hydrogen-atom","Chemistry","⚛",1],
+["Alpha Decay","alpha-decay","Physics","☢",1],
+["Beta Decay","beta-decay","Physics","⚛",1],
+["Build a Nucleus","build-a-nucleus","Chemistry","⚛",1],
+["Normal Modes","normal-modes","Physics","〰",1],
+["Blackbody Spectrum","blackbody-spectrum","Physics","🌈",1]
+];
+
+const $=id=>document.getElementById(id);
+let subject="All",page="all",activeSim=null;
+let favorites=new Set(JSON.parse(localStorage.getItem("nexus-favorites")||"[]"));
+
+$("countStat").textContent=new Set(sims.map(s=>s[1])).size+"+";
+
+function toast(msg){
+ $("toast").textContent=msg;
+ $("toast").classList.add("show");
+ setTimeout(()=>$("toast").classList.remove("show"),1900);
+}
+
+function render(){
+ const q=$("search").value.trim().toLowerCase();
+ const sort=$("sort").value;
+
+ let items=sims.filter(s=>
+  (subject==="All"||s[2]===subject)&&
+  (page!=="favorites"||favorites.has(s[1]))&&
+  (!q||(s[0]+" "+s[2]).toLowerCase().includes(q))
+ );
+
+ if(sort==="az")items.sort((a,b)=>a[0].localeCompare(b[0]));
+
+ $("grid").innerHTML="";
+ $("heading").textContent=page==="favorites"?"Your favorites":subject==="All"?"Explore the library":subject;
+ $("subheading").textContent=page==="favorites"?"Your saved simulations, ready to launch.":"Choose a simulation to launch it in the built-in lab.";
+ $("crumb").textContent=page==="favorites"?"FAVORITES":subject.toUpperCase();
+
+ if(!items.length){
+  $("grid").innerHTML='<div class="empty">✦<br><br>No simulations found.<br>Try another search or subject.</div>';
+  return;
+ }
+
+ items.forEach((s,i)=>{
+  const card=document.createElement("button");
+  card.className="sim";
+  card.style.setProperty("--glow",["#52e5ff","#a78bfa","#70f0c0","#ffcf70"][i%4]);
+
+  const top=document.createElement("div");
+  top.className="simtop";
+
+  const icon=document.createElement("div");
+  icon.className="simicon";
+  icon.textContent=s[3];
+
+  const star=document.createElement("button");
+  star.className="star"+(favorites.has(s[1])?" on":"");
+  star.textContent=favorites.has(s[1])?"★":"☆";
+  star.title="Toggle favorite";
+  star.onclick=e=>{
+   e.stopPropagation();
+   toggleFavorite(s[1]);
+   render();
+  };
+
+  top.append(icon,star);
+
+  const title=document.createElement("h3");
+  title.textContent=s[0];
+
+  const desc=document.createElement("p");
+  desc.textContent="Interactive PhET simulation";
+
+  const tag=document.createElement("span");
+  tag.className="tag";
+  tag.textContent=s[2];
+
+  const hint=document.createElement("span");
+  hint.className="launchhint";
+  hint.textContent="LAUNCH ↗";
+
+  card.append(top,title,desc,tag,hint);
+  card.onclick=()=>launch(s);
+  $("grid").append(card);
+ });
+}
+
+function toggleFavorite(slug){
+ if(favorites.has(slug))favorites.delete(slug);
+ else favorites.add(slug);
+
+ localStorage.setItem("nexus-favorites",JSON.stringify([...favorites]));
+ toast(favorites.has(slug)?"Added to favorites":"Removed from favorites");
+}
+
+function showFavorites(){
+ page="favorites";
+ subject="All";
+ document.querySelectorAll("[data-page]").forEach(b=>
+  b.classList.toggle("active",b.dataset.page==="favorites")
+ );
+ document.querySelectorAll("[data-subject]").forEach(b=>b.classList.remove("active"));
+ render();
+ $("library").scrollIntoView({behavior:"smooth"});
+}
+
+function launch(s){
+ activeSim=s;
+ $("viewname").textContent=s[0];
+ $("loading").style.zIndex="2";
+ $("viewer").classList.add("open");
+
+ $("simframe").src=
+  `https://phet.colorado.edu/sims/html/${s[1]}/latest/${s[1]}_en.html`;
+
+ document.body.style.overflow="hidden";
+}
+
+$("simframe").addEventListener("load",()=>{
+ $("loading").style.zIndex="-1";
+});
+
+function closeViewer(){
+ $("viewer").classList.remove("open");
+ $("simframe").src="about:blank";
+ document.body.style.overflow="";
+}
+
+function openExternal(){
+ if(activeSim){
+  window.open(
+   `https://phet.colorado.edu/sims/html/${activeSim[1]}/latest/${activeSim[1]}_en.html`,
+   "_blank",
+   "noopener"
+  );
+ }
+}
+
+function toggleFullscreen(){
+ const frame=$("simframe");
+ if(frame.requestFullscreen)frame.requestFullscreen();
+ else toast("Fullscreen is not supported by this browser");
+}
+
+document.querySelectorAll("[data-page]").forEach(b=>{
+ b.onclick=()=>{
+  page=b.dataset.page;
+  subject="All";
+
+  document.querySelectorAll("[data-page]").forEach(x=>
+   x.classList.toggle("active",x===b)
+  );
+
+  document.querySelectorAll("[data-subject]").forEach(x=>
+   x.classList.remove("active")
+  );
+
+  render();
+ };
+});
+
+document.querySelectorAll("[data-subject]").forEach(b=>{
+ b.onclick=()=>{
+  page="all";
+  subject=b.dataset.subject;
+
+  document.querySelectorAll("[data-page]").forEach(x=>
+   x.classList.toggle("active",x.dataset.page==="all")
+  );
+
+  document.querySelectorAll("[data-subject]").forEach(x=>
+   x.classList.toggle("active",x===b)
+  );
+
+  document.querySelectorAll("[data-filter]").forEach(x=>
+   x.classList.toggle("active",x.dataset.filter===subject)
+  );
+
+  render();
+  $("library").scrollIntoView({behavior:"smooth"});
+ };
+});
+
+document.querySelectorAll("[data-filter]").forEach(b=>{
+ b.onclick=()=>{
+  subject=b.dataset.filter;
+  page="all";
+
+  document.querySelectorAll("[data-filter]").forEach(x=>
+   x.classList.toggle("active",x===b)
+  );
+
+  document.querySelectorAll("[data-subject]").forEach(x=>
+   x.classList.toggle("active",x.dataset.subject===subject)
+  );
+
+  document.querySelectorAll("[data-page]").forEach(x=>
+   x.classList.toggle("active",x.dataset.page==="all")
+  );
+
+  render();
+ };
+});
+
+$("search").addEventListener("input",render);
+$("sort").addEventListener("change",render);
+
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape")closeViewer();
+
+ if(e.key==="/"&&document.activeElement!==$("search")){
+  $("search").focus();
+  e.preventDefault();
+ }
+});
+
+render();
+</script>
+</body>
+</html>
